@@ -1,0 +1,37 @@
+<div class="row product justify-content-evenly">
+  <div style="display: flex; justify-content: space-between; padding: 30px">
+      <h1>LISTADO DE PRODUCTOS</h1>
+      <div> ORDENAR
+        <a href="?page=1&limit={{paginationInfo.limit}}&sort=asc&price={{price}}&status={{status}}">⬆️</a>
+        <a href="?page=1&limit={{paginationInfo.limit}}&sort=desc&price={{price}}&status={{status}}">⬇️</a>
+      </div>
+  </div>
+    {{#each prods}}
+    <div class="containerCard containerProd" style="width: 14rem; margin-top: 5px;">
+        <div style="margin-top: 10px; width:200px; height:200px;">
+            <img src={{this.thumbnail}} class="card-img-top" alt="foto de Product {{this.id}}">
+        </div>
+        <div class="card-body">
+            <h3 id="titleProduct" class="card-title">{{this.title}}</h3>
+            <p id="descriptionProduct" class="card-text">{{this.description}}</p>
+            <p id="priceProduct" class="card-text">$ {{this.price}}</p>
+            <button class="id="buttonCart" id="buttonCart" data-cart-id="{{this.id}}">🛒</button>
+        </div>
+    </div>
+    {{/each}}
+</div>
+  <div id="cartContainer" class="card-body">
+    <p>No hay productos en el carrito</p>
+  </div>
+</div>
+<div style="display: flex; justify-content: center; margin-top: 30px">
+  <div class="pagination">
+    {{#if paginationInfo.hasPrevPage}}
+    <a href="?page={{paginationInfo.prevPage}}&limit={{paginationInfo.limit}}&sort={{sort}}&price={{price}}&status={{status}}">⬅️ Anterior</a>
+    {{/if}}
+    <span style="margin-left: 20px; margin-right: 20px">Página {{paginationInfo.page}} de {{paginationInfo.totalPages}}</span>
+    {{#if paginationInfo.hasNextPage}}
+    <a href="?page={{paginationInfo.nextPage}}&limit={{paginationInfo.limit}}&sort={{sort}}&price={{price}}&status={{status}}">Siguiente ➡️</a>
+    {{/if}}
+  </div>
+</div>
