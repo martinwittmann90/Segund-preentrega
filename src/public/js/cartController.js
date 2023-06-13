@@ -1,10 +1,3 @@
-const form = document.querySelector('.form')
-const titleInput = document.getElementById('title')
-const descriptionInput = document.getElementById('description')
-const priceInput = document.getElementById('price')
-const codeInput = document.getElementById('code')
-const stockInput = document.getElementById('stock')
-
 async function addToCart(productId) {
   try {
     let cartId = localStorage.getItem('cartId')
@@ -16,11 +9,8 @@ async function addToCart(productId) {
       cartId = data.payload._id
       localStorage.setItem('cartId', cartId)
     }
-    console.log('=======================', cartId)
-    console.log('=======================', productId)
     await fetch(`http://localhost:8080/api/carts/${cartId}/product/${productId}`, { method: 'POST' })
     alert('product added correctly')
-    // updateCartBadge()
   } catch (error) {
     alert('failed to add to cart')
   }
