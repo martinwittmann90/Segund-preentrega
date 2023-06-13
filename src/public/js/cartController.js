@@ -16,11 +16,11 @@ async function addToCart(productId) {
   }
 }
 
-async function updateCartBadge() {
+async function updateCartFunction() {
   try {
     const cartId = localStorage.getItem('cartId')
     if (!cartId) {
-      document.getElementById('badgeCart').textContent = ''
+      document.getElementById('CartVisuals').textContent = ''
       return
     }
 
@@ -30,12 +30,12 @@ async function updateCartBadge() {
     if (data.payload && data.payload[0] && data.payload[0].products) {
       const cart = data.payload[0]
       const itemCount = cart.products.length
-      document.getElementById('badgeCart').textContent = itemCount.toString()
+      document.getElementById('CartVisuals').textContent = itemCount.toString()
     } else {
-      document.getElementById('badgeCart').textContent = ''
+      document.getElementById('CartVisuals').textContent = ''
     }
   } catch (error) {
-    document.getElementById('badgeCart').textContent = ''
+    document.getElementById('CartVisuals').textContent = ''
   }
 }
 try {
