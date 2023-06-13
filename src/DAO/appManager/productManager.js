@@ -75,9 +75,9 @@ class ProductManager {
   async read() {
     let allProductsArray = [];
     try {
-      let allProductsString = await fs.promises.readFile(this.path, "utf-8");
-      allProductsString.length > 0
-        ? (allProductsArray = JSON.parse(allProductsString))
+      let allproductstring = await fs.promises.readFile(this.path, "utf-8");
+      allproductstring.length > 0
+        ? (allProductsArray = JSON.parse(allproductstring))
         : (allProductsArray = []);
     } catch (err) {
       console.log("Error en la lectura del archivo", err);
@@ -86,9 +86,9 @@ class ProductManager {
   }
 
   async write(allProductsArray) {
-    let allProductsString = JSON.stringify(allProductsArray, null, 2);
+    let allproductstring = JSON.stringify(allProductsArray, null, 2);
     try {
-      await fs.promises.writeFile(this.path, allProductsString);
+      await fs.promises.writeFile(this.path, allproductstring);
     } catch (err) {
       console.log("Error en la escritura", err);
     }

@@ -4,19 +4,12 @@ import MongoDBProducts from "../services/dbproducts.service.js"
 const viewsRouter = express.Router();
 const newProductManager = new MongoDBProducts;
 
-
-viewsRouter.get('/carts/:cid', async (req, res)=> {
-
-    res.render('cart', {/* el array de productos del cart /:cid populado para que se vea todo el producto y no solo el id y qty*/})
-  
-});
-
 viewsRouter.get('/', async (req, res)=> {
     try{
         const { page, limit, sort}= req.query;
         const queryResult = await newProductManager.getAllProducts(page, limit, sort);
         const {docs, ...paginationInfo} = queryResult;
-        const prods = docs.map((product) => {
+        const productsVisualice = docs.map((product) => {
             return {
                 id: product.id,
                 title: product.title,
@@ -31,7 +24,7 @@ viewsRouter.get('/', async (req, res)=> {
 
         const nextPage = parseInt(page)+1;
         const nextPageUrl = `/?page=${nextPage}&limit=${limit}&sort=${sort}`;
-        res.render('home', {prods, paginationInfo, nextPageUrl, sort});
+        res.render('home', {productsVisualice, paginationInfo, nextPageUrl, sort});
     } catch(error) {
         console.log(error)
     }
@@ -42,7 +35,7 @@ viewsRouter.get('/products', async (req, res)=> {
         const { page, limit, sort, category, status }= req.query;
         const queryResult = await newProductManager.getAllProducts(page, limit, sort, category, status);
         const {docs, ...paginationInfo} = queryResult;
-        const prods = docs.map((product) => {
+        const productsVisualice = docs.map((product) => {
             return {
                 id: product.id,
                 title: product.title,
@@ -57,7 +50,7 @@ viewsRouter.get('/products', async (req, res)=> {
         });
         const response = {
             status: 'success',
-            payload: prods,
+            payload: productsVisualice,
             totalPages: paginationInfo.totalPages,
             prevPage: paginationInfo.prevPage,
             nextPage: paginationInfo.nextPage,
@@ -73,7 +66,7 @@ viewsRouter.get('/products', async (req, res)=> {
             throw new Error('La página solicitada no existe');
         }
         const nextPageUrl = `/?page=${nextPage}&limit=${limit}&sort=${sort}&category=${category}&status=${status}`;
-        res.render('products', {prods, paginationInfo, nextPageUrl, sort, category, status})
+        res.render('products', {productsVisualice, paginationInfo, nextPageUrl, sort, category, status})
         console.log(response);
     } catch(error) {
         console.error(error);
@@ -89,7 +82,7 @@ viewsRouter.get('/realtimeproducts', async (req, res)=> {
         const { page, limit, sort } = req.query;
         const queryResult = await newProductManager.getAllProducts(page, limit, sort);
         const {docs, ...paginationInfo} = queryResult;
-        const prods = docs.map((product) => {
+        const productsVisualice = docs.map((product) => {
             return {
                 id: product.id,
                 title: product.title,
@@ -104,7 +97,7 @@ viewsRouter.get('/realtimeproducts', async (req, res)=> {
 
         const nextPage = parseInt(page)+1;
         const nextPageUrl = `/realtimeproducts?page=${nextPage}&limit=${limit}&sort=${sort}`;
-        res.render('realtimeproducts', {prods, paginationInfo, nextPageUrl, sort});
+        res.render('realtimeproducts', {productsVisualice, paginationInfo, nextPageUrl, sort});
     } catch(error) {
         console.log(error)
     }

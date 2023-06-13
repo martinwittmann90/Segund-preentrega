@@ -1,7 +1,5 @@
 import express from 'express';
 import MongoDBProducts from "../services/dbproducts.service.js";
-import { validateNumber } from "../utils/utils.js";
-import { checkRequest } from "../middleware/validators.js";
 
 export const productsRouter = express.Router();
 

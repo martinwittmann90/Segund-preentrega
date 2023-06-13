@@ -33,26 +33,20 @@ export default (io) => {
           socket.emit('productDeleteError_back_to_front', { error: 'An error occurred while deleting the product' });
       }
   });
-    //SOCKET CART 
-    socket.on('addProductInCart_front_to_back', async (cartId) => {
-      try {
-          await dbCarts./* actualizar carrito */(cartId);
-          socket.emit('paddProductInCart_back_to_front', { message: 'Producto eliminado exitosamente' });
-          const cartList = await dbCarts./*???*/();
-          io.emit('addProductInCart', { cartList });
-      } catch (error) {
-          console.error('Error adding product:', error);
-          socket.emit('addProductError_back_to_front', { error: 'Ocurrió un error al eliminar el producto' });
-      }
-  });
     //SOCKET CHAT
     socket.on("chat_front_to_back", async (message) => {
-      dbChat.createChat(message);
-      const messages = await dbChat.getChat();
-      console.log(messages);
-      socket.emit("chat_back_to_front", messages);
-      socket.broadcast.emit("chat_back_to_front", messages);
+      try {
+        dbChat.createChat(message);
+        const messages = await dbChat.getChat();
+        console.log(messages);
+        socket.emit("chat_back_to_front", messages);
+        socket.broadcast.emit("chat_back_to_front", messages);
+      }
+      catch (error) {
+        console.log(error);
+    }
     });
+
     //SOCKET DESCONEXION
     socket.on("disconnect", () => {
       console.log("User was disconnected");

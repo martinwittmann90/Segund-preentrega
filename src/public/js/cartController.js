@@ -1,45 +1,70 @@
-const socket = io();
-const cartButtom = document.getElementById("buttonCart");
+const form = document.querySelector('.form')
+const titleInput = document.getElementById('title')
+const descriptionInput = document.getElementById('description')
+const priceInput = document.getElementById('price')
+const codeInput = document.getElementById('code')
+const stockInput = document.getElementById('stock')
 
-document.querySelectorAll('.buttonCart').forEach((button) => {
-    button.addEventListener('click', (event) => {
-      event.preventDefault();
-      const cartId = button.dataset.cartId;
-      socket.emit('addProductInCart_front_to_back', cartId);
-    });
-  });
+async function addToCart(productId) {
+  try {
+    let cartId = localStorage.getItem('cartId')
+    if (!cartId) {
+      const response = await fetch('http://localhost:8080/api/carts', {
+        method: 'POST'
+      })
+      const data = await response.json()
+      cartId = data.payload._id
+      localStorage.setItem('cartId', cartId)
+    }
+    console.log('=======================', cartId)
+    console.log('=======================', productId)
+    await fetch(`http://localhost:8080/api/carts/${cartId}/product/${productId}`, { method: 'POST' })
+    alert('product added correctly')
+    // updateCartBadge()
+  } catch (error) {
+    alert('failed to add to cart')
+  }
+}
 
-const titleContainer = document.getElementById("titleProduct");
-const descriptionContainer = document.getElementById("descriptionProduct");
-const priceContainer = document.getElementById("priceProduct");
-const cartContainer = document.getElementById("cartContainer");
+async function updateCartBadge() {
+  try {
+    const cartId = localStorage.getItem('cartId')
+    if (!cartId) {
+      document.getElementById('badgeCart').textContent = ''
+      return
+    }
 
-btn.addEventListener("click", (event) => {
-    event.preventDefault();
-    const title = titleContainer.value;
-    const description = descriptionContainer.value;
-    const price = priceContainer.value;
-    socket.emit("cart_front_to_back", {
-        title: title,
-        description: description,
-        price: price
-  });
-});
+    const response = await fetch(`http://localhost:8080/api/carts/${cartId}`)
+    const data = await response.json()
 
-socket.on("cart_back_to_front", (newCart) => {
-    cartContainer.innerHTML = newCart
-    .map((cart) => {
-        return `<div
-        class="notification is-primary is-light"
-        style=" text-align: justify; margin-rigth:35px; padding: 15px;
-        border-radius: 20px;">
-            <div>
-                <p>${title.title}</p>
-                <p>${description.description}</p>
-                <p>${price.price}</p>
-            </div>
-        </div>`;
-    })
-    .join("");
-    /* window.location.reload(); */
-});
+    if (data.payload && data.payload[0] && data.payload[0].products) {
+      const cart = data.payload[0]
+      const itemCount = cart.products.length
+      document.getElementById('badgeCart').textContent = itemCount.toString()
+    } else {
+      document.getElementById('badgeCart').textContent = ''
+    }
+  } catch (error) {
+    document.getElementById('badgeCart').textContent = ''
+  }
+}
+try {
+  socket.on('productAdded', async (product) => {
+    const container = document.getElementById('product-container')
+    const productListElement = document.createElement('div')
+    productListElement.innerHTML = `
+              <div id="${product._id}" class="product">
+                <h2>${product.title}</h2>
+                <img src="${product.thumbnails}" alt="">
+                <p><strong>Price:</strong> $${product.price}</p>
+                <p><strong>Stock:</strong> ${product.stock}</p>
+                <button class="delete-btn" onclick="deleteProductWithSocket('${product._id}')">Delete</button>
+              </div>`
+
+    container.appendChild(productListElement)
+  })
+  socket.on('product:deleted', (id) => {
+    const div = document.getElementById(id)
+    div.remove()
+  })
+} catch (error) { }

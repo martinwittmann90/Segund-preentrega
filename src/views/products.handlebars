@@ -6,7 +6,7 @@
         <a href="?page=1&limit={{paginationInfo.limit}}&sort=desc&price={{price}}&status={{status}}">⬇️</a>
       </div>
   </div>
-    {{#each prods}}
+    {{#each productsVisualice}}
     <div class="containerCard containerProd" style="width: 14rem; margin-top: 5px;">
         <div style="margin-top: 10px; width:200px; height:200px;">
             <img src={{this.thumbnail}} class="card-img-top" alt="foto de Product {{this.id}}">
@@ -15,7 +15,7 @@
             <h3 id="titleProduct" class="card-title">{{this.title}}</h3>
             <p id="descriptionProduct" class="card-text">{{this.description}}</p>
             <p id="priceProduct" class="card-text">$ {{this.price}}</p>
-            <button class="id="buttonCart" id="buttonCart" data-cart-id="{{this.id}}">🛒</button>
+            <button onclick="addToCart('{{this._id}}')">🛒</button>
         </div>
     </div>
     {{/each}}
@@ -35,3 +35,5 @@
     {{/if}}
   </div>
 </div>
+
+<script src="/src/public/js/cartController.js"></script>

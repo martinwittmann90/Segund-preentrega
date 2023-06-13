@@ -43,7 +43,7 @@ class CartManager {
             await fs.writeFile(this.path, cartsString);
         } catch (error) {
             console.log(error);
-            throw new Error('General error');
+            throw new Error('error');
         }}
 
 
