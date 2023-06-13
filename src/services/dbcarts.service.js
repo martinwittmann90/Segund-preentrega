@@ -3,118 +3,126 @@ import  CartModel from '../DAO/models/cart.model.js';
 import ProductModel from '../DAO/models/product.model.js';
 
 class MongoDBCarts {
-    getCarts = async () => {
-        const carts = await CartModel.find({});
-        return carts;
-    }
-    createCart = async () => {
+    async createCart() {
         try {
-            const newCart = await CartModel.create({ products: [] });
-            const idString = newCart._id.toString();
-            return idString
-        } catch (error) {
-            console.log(error);
-            throw new Error();
+          const cart = await CartModel.create({})
+          return cart
+        } catch (err) {
+          throw err
         }
-    }
-    async getById(cId) {
+      }
+    
+      async getCartById(cartId) {
         try {
-            const cart = await CartModel.findOne({ _id: cId }).populate({
-                path: "products",
-                populate: { path: "_id", model: "products" },
-            });
-            return cart
+          const cart = await CartModel.findOne({ _id: cartId }).populate('products.productId').lean()
+          return cart
         } catch (error) {
-            throw error
+          throw error
         }
-    }
-    deleteCart = async (cId) => {
+      }
+    
+      async addProductToCart(cartId, productId) {
         try {
-            const cart = await CartModel.findOne({ _id: cId });
-            if (!cart) {
-                throw new Error('Cart not found');
-            }
-
-            cart.products = []; // Vaciar la lista de productos del carrito
-            return await cart.save();
+          const product = await ProductModel.findOne({ _id: productId })
+          if (!product) {
+            console.log('no product')
+            throw new Error('Product not found')
+          }
+          const cart = await CartModel.findOne({ _id: cartId })
+          if (!cart) {
+            console.log('no cart')
+            throw new Error('Cart not found')
+          }
+          const existingProduct = cart.products.find(product => productId.toString() === productId)
+          if (existingProduct) {
+            existingProduct.quantity += 1
+          } else {
+            cart.products.push({
+                productId,
+                quantity: 0
+            })
+          }
+          const savedCart = (await cart.save()).populate('products.productId')
+          return savedCart
         } catch (error) {
-            throw error
+          throw error
         }
-    }
-    removeProductFromCart = async (cId, pId) => {
+      }
+    
+      async removeProductFromCart(cartId, productId) {
         try {
-            const cart = await CartModel.findOne({ _id: cId });
-            if (!cart) {
-                throw new Error('Cart not found');
-            }
-
-            const product = await ProductModel.findOne({ _id: pId });
-            if (!product) {
-                throw new Error('product not found');
-            }
-
-            const productCart = cart.products.findIndex(item => item.products.toString() === pId);
-
-            cart.products.splice(productCart, 1);
-
-            await cart.save();
-
+          const cart = await CartModel.findOne({ _id: cartId })
+          if (!cart) {
+            throw new Error('Cart not found')
+          }
+    
+          const productIndex = cart.products.findIndex(product => product._id.toString() === productId)
+          if (productIndex === -1) {
+            throw new Error('Product not found in the cart')
+          }
+    
+          if (cart.products[productIndex].quantity > 1) {
+            cart.products[productIndex].quantity -= 1
+          } else {
+            cart.products.splice(productIndex, 1)
+          }
+    
+          const savedCart = await cart.save()
+          return savedCart
         } catch (error) {
-            throw error;
+          throw error
         }
-    }
-
-    addProductToCart = async (cId, pId, pQuantity) => {
+      }
+    
+      async clearCart(cartId) {
         try {
-            const cart = await CartModel.findOne({ _id: cId });
-            if (!cart) {
-                throw new Error('Cart not found');
-            }
-
-            const product = await ProductModel.findOne({ _id: pId });
-            if (!product) {
-                throw new Error('product not found');
-            }
-
-            const productCart = cart.products.findIndex(item => item.products.toString() === pId);
-
-            if (productCart === -1) {
-                cart.products.push({
-                    products: pId,
-                    quantity: pQuantity
-                })
-                return await cart.save()
-
-            } else {
-                cart.products[productCart].quantity += pQuantity;
-                return await cart.save()
-            }
+          const cart = await CartModel.findOne({ _id: cartId })
+          if (!cart) {
+            throw new Error('Cart not found')
+          }
+          cart.products = []
+          const clearedCart = await cart.save()
+          return clearedCart
         } catch (error) {
-            throw error
+          throw error
         }
-    }
-
-
-    updateCart = async (cId, cartData) => {
+      }
+    
+      async updateCart(cartId, products) {
         try {
-            const cart = await CartModel.findOne({ _id: cId });
-
-            if (!cart) {
-                throw new Error('Cart not found');
-            }
-
-            if (Object.keys(cartData).length === 0) {
-                throw new Error('empty object');
-            } else {
-                cart.products = cartData;
-            }
-
-            return await cart.save();
-
+          const cart = await CartModel.findOne({ _id: cartId })
+          if (!cart) {
+            throw new Error('Cart not found')
+          }
+          cart.products = products.map((product) => ({
+            productId: product._id,
+            quantity: product.quantity
+          }))
+          const updatedCart = (await cart.save()).populate('products.productId')
+          return updatedCart
         } catch (error) {
-            throw error
+          throw error
         }
+      }
+    
+      async updateProductQuantity(cartId, productId, quantity) {
+        try {
+          const cart = await CartModel.findOne({ _id: cartId })
+          if (!cart) {
+            throw new Error('Cart not found')
+          }
+          const productIndex = cart.products.findIndex(product => productId.toString() === productId)
+          if (productIndex === -1) {
+            throw new Error('Product not found in the cart')
+          }
+          const updatedQuantity = cart.products[productIndex].quantity + quantity
+          cart.products[productIndex].quantity = updatedQuantity
+          const updatedCart = (await cart.save()).populate('products.productId')
+          return updatedCart
+        } catch (error) {
+          throw error
+        }
+      }
     }
-}
 
 export default MongoDBCarts;

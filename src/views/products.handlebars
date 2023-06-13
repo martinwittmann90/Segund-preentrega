@@ -7,7 +7,7 @@
       </div>
   </div>
     {{#each productsVisualice}}
-    <div class="containerCard containerProd" style="width: 14rem; margin-top: 5px;">
+    <div class="containerCard containerProd" style="width: 14rem; margin-top: 5px;" id="{{this._id}}">
         <div style="margin-top: 10px; width:200px; height:200px;">
             <img src={{this.thumbnail}} class="card-img-top" alt="foto de Product {{this.id}}">
         </div>
@@ -36,4 +36,5 @@
   </div>
 </div>
 
+<script src="/socket.io/socket.io.js"></script>
 <script src="/src/public/js/cartController.js"></script>
