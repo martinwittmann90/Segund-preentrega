@@ -14,7 +14,11 @@ class MongoDBCarts {
     
       async getCartById(cartId) {
         try {
-          const cart = await CartModel.findOne({ _id: cartId }).populate('products.productId').lean()
+          const cart = await CartModel.findOne({ _id: cartId })
+          .populate({
+            path: "products",
+            populate: { path: "_id", model: "products" },
+          }).lean()
           return cart
         } catch (error) {
           throw error
@@ -42,7 +46,10 @@ class MongoDBCarts {
                 quantity: 0
             })
           }
-          const savedCart = (await cart.save()).populate('products.productId')
+          const savedCart = (await cart.save()).populate({
+            path: "products",
+            populate: { path: "_id", model: "products" },
+          });
           return savedCart
         } catch (error) {
           throw error
