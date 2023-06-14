@@ -37,7 +37,7 @@ viewsRouter.get('/products', async (req, res)=> {
         const {docs, ...paginationInfo} = queryResult;
         const productsVisualice = docs.map((product) => {
             return {
-                id: product.id,
+                _id: product._id.toString(),
                 title: product.title,
                 description: product.description,
                 price: product.price,
@@ -84,7 +84,7 @@ viewsRouter.get('/realtimeproducts', async (req, res)=> {
         const {docs, ...paginationInfo} = queryResult;
         const productsVisualice = docs.map((product) => {
             return {
-                id: product.id,
+                _id: product._id.toString(),
                 title: product.title,
                 description: product.description,
                 price: product.price,
@@ -102,5 +102,47 @@ viewsRouter.get('/realtimeproducts', async (req, res)=> {
         console.log(error)
     }
 });
+
+viewsRouter.get("/products/:pid", async (req, res, next) => {
+    try {
+      const { pid } = req.params;
+      const product = await ProductModel.findById(pid);
+      const productSimplificado = {
+        _id: product._id.toString(),
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        thumbnail: product.thumbnail,
+        code: product.code,
+        stock: product.stock,
+        category: product.category,
+      };
+  
+      console.log(productSimplificado);
+      res.render("product", { product: productSimplificado });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+
+viewsRouter.get("/carts/:cid", async (req, res, next) => {
+    try {
+      const { cid } = req.params;
+      const cart = await cartService.get(cid);
+  
+      const simplifiedCart = cart.products.map((item) => {
+        return {
+          title: item.product.title,
+          price: item.product.price,
+          quantity: item.quantity,
+        };
+      });
+      console.log(simplifiedCart);
+      res.render("cart", { cart: simplifiedCart });
+    } catch (error) {
+      next(error);
+    }
+  });
 
 export default viewsRouter;

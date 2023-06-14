@@ -5,113 +5,89 @@ import MongoDBProducts from "../services/dbproducts.service.js";
 const dbCarts = new MongoDBCarts();
 const cartRouter = express.Router()
 
-cartRouter.get('/:cid', async (req, res) => {
-    try {
-      const cid = req.params.cid
-      const cart = await dbCarts.getCartById(cid)
-      if (!cart) {
-        return res.status(404).json({ status: 'error', message: `cart ${cid} not found` })
-      }
-      res.status(200).json({ status: 'success', payload: cart })
-    } catch (error) {
-      res.status(500).json({ status: 'error', message: 'error getting cart' })
-    }
-  })
-  
-  cartRouter.post('/', async (req, res) => {
-    try {
-      const cart = await dbCarts.createCart()
-      res.status(201).json({ status: 'success', payload: cart })
-    } catch (error) {
-      res.status(500).json({ status: 'error', message: 'error creating cart' })
-    }
-  })
+cartRouter.post("/", async (req, res) => {
+  try {
+    const newCart = await dbCarts.createOne();
+    res.status(201).json(newCart);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
-  cartRouter.post('/:cid/product/:pid', async (req, res) => {
-    try {
-      const cid = req.params.cid
-      const pid = req.params.pid
-      const cart = await dbCarts.addProductToCart(cid, pid)
-      res.status(200).json({ status: 'success', payload: cart })
-    } catch (error) {
-      res.status(500).json({ status: 'error', message: 'FATAL ERROR' })
-    }
-  })
-  
-  cartRouter.delete('/:cid', async (req, res) => {
-    try {
-      const cid = req.params.cid
-      const cart = await dbCarts.clearCart(cid)
-      return res.status(200).json({
-        status: 'success',
-        msg: 'Cart deleted',
-        payload: cart
-      })
-    } catch (error) {
-      return res.status(400).json({
-        status: 'error',
-        msg: error.message
-      })
-    }
-  })
-  
-  cartRouter.delete('/:cid/products/:pid', async (req, res) => {
-    try {
-      const cid = req.params.cid
-      const pid = req.params.pid
-      const cart = await dbCarts.removeProductFromCart(cid, pid)
-      return res.status(200).json({
-        status: 'success',
-        msg: 'Product removed from cart',
-        payload: cart
-      })
-    } catch (error) {
-      return res.status(400).json({
-        status: 'error',
-        msg: error.message
-      })
-    }
-  })
-  
-  cartRouter.put('/:cid', async (req, res) => {
-    try {
-      const cid = req.params.cid
-      const products = req.body.products
-      console.log(products)
-      const cart = await dbCarts.updateCart(cid, products)
-      return res.status(200).json({
-        status: 'success',
-        msg: 'cart updated',
-        payload: cart
-      })
-    } catch (error) {
-      return res.status(500).json({
-        status: 'error',
-        msg: 'Something went wrong',
-        data: {}
-      })
-    }
-  })
-  
-  cartRouter.put('/:cid/products/:pid', async (req, res) => {
-    try {
-      const cid = req.params.cid
-      const pid = req.params.pid
-      const quantity = req.body.quantity
-  
-      const cart = await dbCarts.updateProductQuantity(cid, pid, quantity)
-      return res.status(200).json({
-        status: 'success',
-        msg: 'Product quantity updated in cart',
-        payload: cart
-      })
-    } catch (error) {
-      return res.status(500).json({
-        status: 'error',
-        msg: 'Something went wrong',
-        data: {}
-      })
-    }
-  })
+cartRouter.get("/:cid", async (req, res) => {
+  try {
+    const cartId = req.params.cid;
+    const cart = await dbCarts.get(cartId); ;
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+});
+
+cartRouter.post("/:cid/product/:pid", async (req, res) => {
+  try {
+    const { cid, pid } = req.params;
+    console.log(cid, pid);
+    const cart = await dbCarts.addProductToCart(cid, pid);
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+});
+
+cartRouter.delete("/:cid/products/:pid", async (req, res) => {
+  try {
+    const { cid, pid } = req.params;
+    const cart = await dbCarts.removeProduct(cid, pid);
+    res
+      .status(200)
+      .json({ status: "success", message: "Product removed from cart", cart });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "error", message: "Internal server error" });
+  }
+});
+
+cartRouter.put("/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const { products } = req.body;
+    const cart = await dbCarts.updateCart(cid, products);
+    res
+      .status(200)
+      .json({ status: "success", message: "Cart updated successfully", cart });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "error", message: "Internal server error" });
+  }
+});
+
+cartRouter.put("/:cid/products/:pid", async (req, res) => {
+  try {
+    const { cid, pid } = req.params;
+    const { quantity } = req.body;
+    const cart = await dbCarts.updateProductQuantity(cid, pid, quantity);
+    res
+      .status(200)
+      .json({ status: "success", message: "Product quantity updated", cart });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "error", message: "Internal server error" });
+  }
+});
+
+cartRouter.delete("/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+    await dbCarts.clearCart(cid);
+    res
+      .status(200)
+      .json({ status: "success", message: "Cart cleared successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: "error", message: "Internal server error" });
+  }
+});
 
 export default cartRouter;

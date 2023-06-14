@@ -1,10 +1,10 @@
-import { Schema, model } from  "mongoose";
+import { Schema, model } from "mongoose";
 
 const cartSchema = new Schema({
   products: {
     type: [
       {
-        productId: {
+        product: {
           type: Schema.Types.ObjectId,
           ref: "products",
           required: true,
@@ -14,8 +14,10 @@ const cartSchema = new Schema({
     ],
     default: [],
   },
-},{ versionKey: false });
+}, { versionKey: false });
 
 const CartModel = model("carts", cartSchema);
-export default CartModel
+
+export default CartModel;
+
 
