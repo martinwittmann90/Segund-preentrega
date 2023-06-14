@@ -15,15 +15,12 @@
             <h3 id="titleProduct" class="card-title">{{this.title}}</h3>
             <p id="descriptionProduct" class="card-text">{{this.description}}</p>
             <p id="priceProduct" class="card-text">$ {{this.price}}</p>
-            <button onclick="addToCart('{{this._id}}')">🛒</button>
+            <a href="/products/{{this._id}}">ver bien a {{this._id}}</a>
+            <button onclick="putIntoCart('{{this._id}}')">🛒{{this._id}}</button>
+            <br />
         </div>
     </div>
     {{/each}}
-</div>
-  <div id="cartContainer" class="card-body">
-    <p>No hay productos en el carrito</p>
-  </div>
-</div>
 <div style="display: flex; justify-content: center; margin-top: 30px">
   <div class="pagination">
     {{#if paginationInfo.hasPrevPage}}
@@ -36,4 +33,4 @@
   </div>
 </div>
 <script src="/socket.io/socket.io.js"></script>
-<script src="/src/public/js/cartController.js"></script>
+<script src="/js/cartController.js"></script>
