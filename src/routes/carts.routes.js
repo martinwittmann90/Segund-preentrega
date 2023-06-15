@@ -1,7 +1,5 @@
 import express from 'express';
 import MongoDBCarts from "../services/dbcarts.service.js";
-
-
 const dbCarts = new MongoDBCarts();
 const cartsRouter = express.Router()
 
@@ -18,7 +16,7 @@ try {
 cartsRouter.get("/:cid", async (req, res) => {
 try {
   const cartId = req.params.cid;
-  const cart = await dbCarts.get(cartId); //.populate('products');
+  const cart = await dbCarts.get(cartId);
   res.status(200).json(cart);
 } catch (error) {
   res.status(404).json({ message: error.message });

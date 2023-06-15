@@ -21,7 +21,6 @@ const validateNumber = (number) => {
 
 //----------------MONGO------------------------------
 import { connect, model, Schema, mongoose } from 'mongoose';
-import ProductModel from '../DAO/models/product.model.js';
 
 export async function connectMongo() {
   try {

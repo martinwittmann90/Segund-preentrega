@@ -47,5 +47,4 @@ class MongoDBChats {
   }
 }
 
-
 export default MongoDBChats;
