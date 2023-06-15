@@ -1,4 +1,4 @@
-//@ts-check
+
 import MongoDBProducts from '../services/dbproducts.service.js';
 import MongoDBChats from '../services/dbchats.service.js';
 import MongoDBCarts from '../services/dbcarts.service.js';

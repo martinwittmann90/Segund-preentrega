@@ -1,9 +1,12 @@
 import express from 'express';
 import MongoDBProducts from "../services/dbproducts.service.js"
 import ProductModel from '../DAO/models/product.model.js';
+import MongoDBCarts from "../services/dbcarts.service.js";
 
-const viewsRouter = express.Router();
+
+const dbCarts = new MongoDBCarts();
 const newProductManager = new MongoDBProducts;
+const viewsRouter = express.Router();
 
 viewsRouter.get('/', async (req, res)=> {
     try{
@@ -140,7 +143,7 @@ viewsRouter.get("/carts/:cid", async (req, res, next) => {
         };
       });
       console.log(simplifiedCart);
-      res.render("cart", { cart: simplifiedCart });
+      res.render("carts", { cart: simplifiedCart });
     } catch (error) {
       next(error);
     }

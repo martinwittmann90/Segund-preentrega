@@ -1,4 +1,3 @@
-//@ts-check
 import  CartModel from '../DAO/models/cart.model.js';
 import ProductModel from '../DAO/models/product.model.js';
 
@@ -93,16 +92,3 @@ class MongoDBCarts {
 }
 
 export default MongoDBCarts;
-/* 
-async getCartById(cartId) {
-  try {
-    const cart = await CartModel.findOne({ _id: cartId })
-    .populate({
-      path: "products",
-      populate: { path: "_id", model: "products" },
-    }).lean()
-    return cart
-  } catch (error) {
-    throw error
-  }
-} */

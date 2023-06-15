@@ -3,17 +3,14 @@ import express from 'express'
 import morgan from "morgan";
 import { Server as SocketServer } from "socket.io";
 import http from "http";
-
 import viewsRouter from "./routes/view.routes.js";
 import productsRouter from "./routes/products.routes.js";
 import cartsRouter from "./routes/carts.routes.js";
 import chatRouter from "./routes/chat.routes.js"
-
 import websockets from "./websockets/websockets.js";
 import exphbs from "express-handlebars";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-
 import { connectMongo } from "./utils/utils.js";
 
 /*-------VARIABLES-------*/

@@ -1,4 +1,4 @@
-//@ts-check
+
 import ProductModel from "../DAO/models/product.model.js";
 
 class MongoDBProducts {
