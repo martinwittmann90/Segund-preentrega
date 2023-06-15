@@ -130,7 +130,7 @@ viewsRouter.get("/products/:pid", async (req, res, next) => {
 viewsRouter.get("/carts/:cid", async (req, res, next) => {
     try {
       const { cid } = req.params;
-      const cart = await cartService.get(cid);
+      const cart = await dbCarts.get(cid);
   
       const simplifiedCart = cart.products.map((item) => {
         return {

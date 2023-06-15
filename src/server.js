@@ -6,7 +6,7 @@ import http from "http";
 
 import viewsRouter from "./routes/view.routes.js";
 import productsRouter from "./routes/products.routes.js";
-import cartRouter from "./routes/carts.routes.js";
+import cartsRouter from "./routes/carts.routes.js";
 import chatRouter from "./routes/chat.routes.js"
 
 import websockets from "./websockets/websockets.js";
@@ -39,11 +39,8 @@ app.use('/', viewsRouter);
 app.use('/realtimeproducts', viewsRouter); 
 app.use('/products', viewsRouter);
 app.use("/chat", chatRouter);
-app.use('/carts/:cid', viewsRouter);
 app.use('/api/products', productsRouter);
-app.use('/api/carts', cartRouter);
-app.use('/api/carts/:cid', cartRouter);
-app.use('/api/carts/:cid/products/:pid', cartRouter);
+app.use('/api/carts', cartsRouter);
 
 /*-------SERVIDORES-------*/
 const httpServer = http.createServer(app);

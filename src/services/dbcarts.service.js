@@ -9,8 +9,7 @@ class MongoDBCarts {
   }
 
   async get(cartId) {
-    const cart = await CartModel.findById(cartId).populate("products.product");
-
+    const cart = await CartModel.findById(cartId).populate("products.product").lean()
     if (!cart) {
       throw new Error("Cart not found");
     }
@@ -50,8 +49,6 @@ class MongoDBCarts {
 
   async updateProductQuantity(cartId, productId, quantity) {
     try {
-      //   console.log(cartId, productId, quantity);
-
       const cart = await CartModel.findById(cartId);
       const productIndex = cart.products.findIndex(
         (p) => p.product.toString() === productId
