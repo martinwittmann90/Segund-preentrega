@@ -57,11 +57,11 @@
           <div class="field">
             <label class="label">Imágen</label>
             <div class="control">
-              <input class="input is-success" type="text" placeholder="Ingrese una url con la imágen del producto" value="" name="thumbnails"/>
+              <input class="input is-success" type="text" placeholder="Ingrese una url con la imágen del producto" value="" name="thumbnail"/>
             </div>
           </div>
-            {{!-- <label for="thumbnails">Imagen:</label>
-                <input type="file" id="thumbnails" name="thumbnails" required> --}}
+            {{!-- <label for="thumbnail">Imagen:</label>
+                <input type="file" id="thumbnail" name="thumbnail" required> --}}
             <div class="field is-grouped">
         <div class="control">
           <button class="button is-primary is-light">Agregar</button>
@@ -80,7 +80,7 @@
             <div class="card" style="width: 150px; margin: 20px">
         <div class="card-image" style="padding: 15px">
           <figure class="image is-4by3">
-                <img src={{this.thumbnail}} class="card-img-top" alt="foto de Product {{this.id}}">
+                <img src={{this.thumbnail}} alt="foto de Product {{this.id}}">
           </figure>
         </div>
         <div class="card-content" >

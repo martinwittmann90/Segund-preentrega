@@ -6,7 +6,7 @@ formProducts.addEventListener("submit", (event) => {
   const title = formProducts.elements.title.value;
   const description = formProducts.elements.description.value;
   const price = formProducts.elements.price.value;
-  const thumbnails = formProducts.elements.thumbnails.value;
+  const thumbnail = formProducts.elements.thumbnail.value;
   const code = formProducts.elements.code.value;
   const stock = formProducts.elements.stock.value;
   const category = formProducts.elements.category.value;
@@ -16,7 +16,7 @@ formProducts.addEventListener("submit", (event) => {
       title,
       description,
       price,
-      thumbnails,
+      thumbnail,
       code,
       stock,
       category,
@@ -49,7 +49,7 @@ formProducts.addEventListener("submit", (event) => {
     <p>Code: ${newProduct.code}</p>
     <p>Stock: ${newProduct.stock}</p>
     <p>Category: ${newProduct.category}</p>
-    <img src="${newProduct.thumbnails}">
+    <img src="${newProduct.thumbnail}">
     `;
     cardContainer.appendChild(newCard);
     window.location.reload();

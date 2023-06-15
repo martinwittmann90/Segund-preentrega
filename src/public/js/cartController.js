@@ -2,7 +2,7 @@ let carritoId = localStorage.getItem("carrito-id");
 const API_URL = "http://localhost:8080/api";
 function putIntoCart(_id) {
   carritoId = localStorage.getItem("carrito-id");
-  const url = API_URL + "/carts/" + carritoId + "/product/" + _id;
+  const url = API_URL + "/carts/" + carritoId + "/products/" + _id;
 
   const data = {};
 
@@ -18,7 +18,7 @@ function putIntoCart(_id) {
     .then((response) => response.json())
     .then((res) => {
       console.log(res);
-      alert("agregado!!!");
+      alert("product add");
     })
     .catch((error) => {
       console.error("Error:", error);

@@ -12,7 +12,7 @@ const checkRequest = (req, res, next) => {
     "status",
     "stock",
     "category",
-    "thumbnails",
+    "thumbnail",
   ];
   const validRequest = requiredKeys.every((key) => keysBody.includes(key));
   if (!validRequest) {
