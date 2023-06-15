@@ -11,7 +11,7 @@ viewsRouter.get('/', async (req, res)=> {
         const {docs, ...paginationInfo} = queryResult;
         const productsVisualice = docs.map((product) => {
             return {
-                id: product.id,
+                _id: product._id.toString(),
                 title: product.title,
                 description: product.description,
                 price: product.price,
