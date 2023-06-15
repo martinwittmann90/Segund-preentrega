@@ -1,5 +1,6 @@
 import express from 'express';
 import MongoDBProducts from "../services/dbproducts.service.js"
+import ProductModel from '../DAO/models/product.model.js';
 
 const viewsRouter = express.Router();
 const newProductManager = new MongoDBProducts;
