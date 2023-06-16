@@ -1,28 +1,17 @@
 import ProductModel from "../DAO/models/product.model.js";
 
 class MongoDBProducts {
-    async getAllProducts(page, limit, sort, category, status) {
+    async getAllProducts(page, limit, sort, query) {
         try {
-            const options = {}
-            if(page){
-                options.page = page || 1
-            }
-            if(limit){
-                options.limit = 5
-            }
-            if(sort){
-                options.sort = { price: sort === 'desc' ? -1 : 1 };
-            }
-
-            const filter = {};
-            if(category){
-                filter.category = category || '';
-            }
-            if(status){
-                filter.status = status || true;
-            }
-            const products = await ProductModel.paginate(filter, options);
-
+            const filter = query
+            ? { title: { $regex: query.title, $options: "i" } }
+            : {};
+            const products = await ProductModel.paginate(filter, {
+                limit: limit || 5,
+                page: page || 1,
+                sort: sort || { price: sort === 'desc' ? -1 : 1 },
+                lean: true,
+              });
             return products;
         } catch (err) {
             throw err;

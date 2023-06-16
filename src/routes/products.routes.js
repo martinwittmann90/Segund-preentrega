@@ -7,7 +7,9 @@ const dbProducts = new MongoDBProducts();
 
 productsRouter.get('/', async (req, res) => {
     try {
-        const products = await dbProducts.getAllProducts();
+        const { limit, page, sort, query } = req.query;
+        console.log(limit, page, sort, query);
+        const products = await dbProducts.getAllProducts(limit, page, sort, query);
         return res.status(200).json({
             status: 'success',
             msg: 'Products retrieved',
