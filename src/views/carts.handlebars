@@ -1,12 +1,12 @@
-<h1>CHECKOUT</h1>
+<h1 class="title__cartpage">CHECKOUT</h1>
 
 {{#if cart.length}}
-  <table>
+  <table class="table__cart">
     <thead>
       <tr>
-        <th>title</th>
-        <th>price</th>
-        <th>quantity</th>
+        <th>Titulo</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
       </tr>
     </thead>
     <tbody>
@@ -25,5 +25,3 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="js/cartController.js"></script>
-
-

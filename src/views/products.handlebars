@@ -1,11 +1,6 @@
+<h1 class="title__productspage">LISTADO DE PRODUCTOS</h1>
+<section>
 <div class="row product justify-content-evenly">
-  <div style="display: flex; justify-content: space-between; padding: 30px">
-      <h1>LISTADO DE PRODUCTOS</h1>
-      <div> ORDENAR POR PRECIO
-        <a href="?page=1&limit={{paginationInfo.limit}}&sort=asc&price={{price}}&status={{status}}">⬆️</a>
-        <a href="?page=1&limit={{paginationInfo.limit}}&sort=desc&price={{price}}&status={{status}}">⬇️</a>
-      </div>
-  </div>
     {{#each productsVisualice}}
     <div class="containerCard containerProd" style="width: 14rem; margin-top: 5px;" id="{{this._id}}">
         <div style="margin-top: 10px; width:200px; height:200px;">
@@ -20,6 +15,14 @@
         </div>
     </div>
     {{/each}}
+</section>
+
+  <div style="display: flex; justify-content: space-between; padding: 30px">
+      <div> ORDENAR POR PRECIO
+        <a href="?page=1&limit={{paginationInfo.limit}}&sort=asc&price={{price}}&status={{status}}">⬆️</a>
+        <a href="?page=1&limit={{paginationInfo.limit}}&sort=desc&price={{price}}&status={{status}}">⬇️</a>
+      </div>
+  </div>
 <div style="display: flex; justify-content: center; margin-top: 30px">
   <div class="pagination">
     {{#if paginationInfo.hasPrevPage}}

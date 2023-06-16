@@ -10,8 +10,8 @@ const viewsRouter = express.Router();
 
 viewsRouter.get('/', async (req, res)=> {
     try{
-        const { page, limit, sort}= req.query;
-        const queryResult = await newProductManager.getAllProducts(page, limit, sort);
+        const { page, limit, sort, query}= req.query;
+        const queryResult = await newProductManager.getAllProducts(page, limit, sort, query);
         const {docs, ...paginationInfo} = queryResult;
         const productsVisualice = docs.map((product) => {
             return {
@@ -36,8 +36,8 @@ viewsRouter.get('/', async (req, res)=> {
 
 viewsRouter.get('/products', async (req, res)=> {
     try{
-        const { page, limit, sort, category, status }= req.query;
-        const queryResult = await newProductManager.getAllProducts(page, limit, sort, category, status);
+        const { page, limit, sort, query }= req.query;
+        const queryResult = await newProductManager.getAllProducts(page, limit, sort, query);
         const {docs, ...paginationInfo} = queryResult;
         const productsVisualice = docs.map((product) => {
             return {
@@ -63,14 +63,14 @@ viewsRouter.get('/products', async (req, res)=> {
             hasNextPage: paginationInfo.hasNextPage,
         };
         const prevPage = parseInt(page) - 1;
-        response.hasPrevPage ? response.prevLink = `localhost:8080/products/?page=${prevPage}&limit=${limit}&sort=${sort}&category=${category}&status=${status}` : response.prevLink = null;
+        response.hasPrevPage ? response.prevLink = `localhost:8080/products/?page=${prevPage}&limit=${limit}&sort=${sort}` : response.prevLink = null;
         const nextPage = parseInt(page) + 1;
-        response.hasNextPage ? response.nextLink = `localhost:8080/products/?page=${nextPage}&limit=${limit}&sort=${sort}&category=${category}&status=${status}` : response.nextLink = null;
+        response.hasNextPage ? response.nextLink = `localhost:8080/products/?page=${nextPage}&limit=${limit}&sort=${sort}` : response.nextLink = null;
         if (parseInt(page) > paginationInfo.totalPages || parseInt(page) < 1) {
             throw new Error('La página solicitada no existe');
         }
-        const nextPageUrl = `/?page=${nextPage}&limit=${limit}&sort=${sort}&category=${category}&status=${status}`;
-        res.render('products', {productsVisualice, paginationInfo, nextPageUrl, sort, category, status})
+        const nextPageUrl = `/?page=${nextPage}&limit=${limit}&sort=${sort}`;
+        res.render('products', {productsVisualice, paginationInfo, nextPageUrl, sort, query})
         console.log(response);
     } catch(error) {
         console.error(error);
@@ -83,8 +83,8 @@ viewsRouter.get('/products', async (req, res)=> {
 
 viewsRouter.get('/realtimeproducts', async (req, res)=> {
     try{
-        const { page, limit, sort } = req.query;
-        const queryResult = await newProductManager.getAllProducts(page, limit, sort);
+        const { page, limit, sort, query } = req.query;
+        const queryResult = await newProductManager.getAllProducts(page, limit, sort, query);
         const {docs, ...paginationInfo} = queryResult;
         const productsVisualice = docs.map((product) => {
             return {
@@ -121,8 +121,6 @@ viewsRouter.get("/products/:pid", async (req, res, next) => {
         stock: product.stock,
         category: product.category,
       };
-  
-      console.log(productSimplificado);
       res.render("product", { product: productSimplificado });
     } catch (error) {
       next(error);
@@ -136,13 +134,15 @@ viewsRouter.get("/carts/:cid", async (req, res, next) => {
       const cart = await dbCarts.get(cid);
   
       const simplifiedCart = cart.products.map((item) => {
-        return {
-          title: item.product.title,
-          price: item.product.price,
-          quantity: item.quantity,
-        };
+        if (item.product) {
+          return {
+            title: item.product.title,
+            price: item.product.price,
+            quantity: item.quantity,
+          };
+        }
+        return null;
       });
-      console.log(simplifiedCart);
       res.render("carts", { cart: simplifiedCart });
     } catch (error) {
       next(error);

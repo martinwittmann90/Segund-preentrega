@@ -26,7 +26,6 @@ try {
 cartsRouter.post("/:cid/product/:pid", async (req, res) => {
 try {
   const { cid, pid } = req.params;
-  console.log(cid, pid);
   const cart = await dbCarts.addProductToCart(cid, pid);
   res.status(200).json(cart);
 } catch (error) {

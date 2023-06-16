@@ -17,7 +17,6 @@ function putIntoCart(_id) {
   fetch(url, options)
     .then((response) => response.json())
     .then((res) => {
-      console.log(res);
       alert("product add");
     })
     .catch((error) => {
@@ -43,7 +42,6 @@ if (!carritoId) {
   fetch(url, options)
     .then((response) => response.json())
     .then((data) => {
-      console.log("Response:", data);
       const carritoId = localStorage.setItem("carrito-id", data._id);
     })
     .catch((error) => {

@@ -9,7 +9,7 @@ class MongoDBProducts {
             const products = await ProductModel.paginate(filter, {
                 limit: limit || 5,
                 page: page || 1,
-                sort: sort || { price: sort === 'desc' ? -1 : 1 },
+                sort: sort === "desc" ? "-price" : "price",
                 lean: true,
               });
             return products;

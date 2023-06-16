@@ -18,7 +18,6 @@ class MongoDBChats {
     }
   }
   async createChat(doc) {
-    console.log(doc);
     try {
       const newChat = await MessageModel.create(doc);
       return newChat;
