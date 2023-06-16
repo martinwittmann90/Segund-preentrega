@@ -25,7 +25,14 @@ class MongoDBCarts {
       if (!product) {
         throw new Error("Product not found");
       }
-      cart.products.push({ product: product._id, quantity: 1 });
+      const existingProductIndex = cart.products.findIndex(
+        (p) => p.product.toString() === productId
+      );
+      if (existingProductIndex !== -1) {
+        cart.products[existingProductIndex].quantity += 1;
+      } else {
+        cart.products.push({ product: product._id, quantity: 1 });
+      }
       await cart.save();
       return cart;
     } catch (error) {
